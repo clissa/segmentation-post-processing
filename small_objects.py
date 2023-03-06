@@ -32,8 +32,8 @@ def small_objects(th: float, min_size: int, show: bool=True):
     # remove small objects, under `min_size` area
     cleaned_mask: np.array = remove_small_objects(labels_pred, min_size=min_size, connectivity=1)
 
-    fig_raw, ax_raw, cmap_raw = plot_mask(labels_pred, nlabels_pred, "raw mask", show=False)
-    fig_clean, ax_clean, _ = plot_mask(cleaned_mask, nlabels_pred, "cleaned mask", show=False)
+    fig_raw, ax_raw, cmap_raw = plot_mask(labels_pred, "raw mask", show=False)
+    fig_clean, ax_clean, _ = plot_mask(cleaned_mask, "cleaned mask", show=False)
     plot_masks_comparison(ax_raw, ax_clean, cmap_raw, show=show)
 
     # save masks without small objects
