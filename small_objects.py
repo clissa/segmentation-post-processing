@@ -38,7 +38,7 @@ def small_objects(th: float, min_size: int, show: bool=True):
 
     # save masks without small objects
     io.imsave(DATA_PATH / f"{fn.split('.')[0]}-cleaned.png", cleaned_mask.astype('uint8') * 255, check_contrast=False)
-
+    return fn, heatmap, t_mask, cleaned_mask, labels_pred
 
 if __name__ == '__main__':
     small_objects(THRESHOLD, MIN_SIZE)
