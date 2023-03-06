@@ -6,6 +6,7 @@ from matplotlib import cm
 from matplotlib.axes._subplots import Axes
 from matplotlib.colors import ListedColormap
 from mpl_toolkits.axes_grid1 import make_axes_locatable
+from scipy import ndimage
 
 DATA_PATH = Path().cwd() / 'data'
 
@@ -26,8 +27,10 @@ def plot_heatmap(heatmap: np.array, title: str, show: bool = True):
     return fig, axis, cax
 
 
-def plot_mask(mask: np.array, nobjs: int, title: str, show: bool = True):
+def plot_mask(mask: np.array, title: str, show: bool = True):
     """Plot mask with a different color per object and title."""
+    objs, nobjs = ndimage.label(mask)
+
     # create colormap: one color per object
     cmap = cm.get_cmap('tab20b', nobjs)
 
