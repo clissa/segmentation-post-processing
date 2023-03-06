@@ -28,8 +28,13 @@ def plot_heatmap(heatmap: np.array, title: str, show: bool = True):
 
 def plot_mask(mask: np.array, nobjs: int, title: str, show: bool = True):
     """Plot mask with a different color per object and title."""
-    # create colormap: one color per object + add black for background
+    # create colormap: one color per object
     cmap = cm.get_cmap('tab20b', nobjs)
+
+    # random shuffle to avoid similar colors to close-by objects
+    np.random.shuffle(cmap.colors)
+
+    # add black for background
     cmap = ListedColormap(np.insert(cmap.colors, 0, [0, 0, 0, 1], axis=0))
 
     # plot mask
