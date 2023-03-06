@@ -11,7 +11,7 @@ THRESHOLD: float = 0.45
 MIN_SIZE: int = 100
 
 
-def small_objects(th: float, min_size: int):
+def small_objects(th: float, min_size: int, show: bool=True):
     # get sample mask
     fn: str = '11.png'
     heatmap: np.array = io.imread(DATA_PATH / '11.png', as_gray=True) / 255
@@ -21,7 +21,7 @@ def small_objects(th: float, min_size: int):
 
     # thresholding
     t_mask: np.array = heatmap > th
-    plot_heatmap(t_mask, "thresholded mask")
+    plot_heatmap(t_mask, "thresholded mask", show=show)
     print_stats(t_mask)
 
     # get objects, this is the first step
