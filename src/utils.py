@@ -11,7 +11,7 @@ from skimage import measure
 DATA_PATH = Path().cwd() / 'data'
 
 
-def plot_heatmap(heatmap: np.array, title: str, show: bool = True):
+def plot_heatmap(heatmap: np.array, title: str):
     """Plot a heatmap with colorbar and title"""
     fig, axis = plt.subplots(1, 1, figsize=(8, 8))
     im = axis.pcolormesh(np.flipud(heatmap), cmap='jet', )
@@ -22,12 +22,10 @@ def plot_heatmap(heatmap: np.array, title: str, show: bool = True):
     divider = make_axes_locatable(axis)
     cax = divider.append_axes("right", size="5%", pad=0.05)
     plt.colorbar(im, cax=cax)
-    if show:
-        plt.show()
     return fig, axis, cax
 
 
-def plot_mask(mask: np.array, title: str, show: bool = True):
+def plot_mask(mask: np.array, title: str):
     """Plot mask with a different color per object and title."""
     labels, nobjs = measure.label(mask, return_num=True, connectivity=1)
     objs = measure.regionprops(labels)
@@ -51,12 +49,10 @@ def plot_mask(mask: np.array, title: str, show: bool = True):
                  )
 
     axis.set_title(title)
-    if show:
-        plt.show()
     return fig, axis, cmap
 
 
-def plot_masks_comparison(ax_raw: Axes, ax_processed: Axes, cmap: ListedColormap, title: str, show: bool = True):
+def plot_masks_comparison(ax_raw: Axes, ax_processed: Axes, cmap: ListedColormap, title: str):
     """Plot masks before and after processing side by side for comparison."""
     fig_cmp, ax_cmp = plt.subplots(1, 2, figsize=(14, 6))
     ax_cmp[0].imshow(ax_raw.get_images()[0].get_array(), cmap=cmap)
@@ -65,8 +61,6 @@ def plot_masks_comparison(ax_raw: Axes, ax_processed: Axes, cmap: ListedColormap
     ax_cmp[1].set_title('after')
     plt.suptitle(title)
     plt.tight_layout()
-    if show:
-        plt.show()
     return fig_cmp, ax_cmp
 
 
