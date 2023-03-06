@@ -44,6 +44,12 @@ def plot_mask(mask: np.array, title: str, show: bool = True):
     # plot mask
     fig, axis = plt.subplots(1, 1, figsize=(8, 8))
     axis.imshow(mask, cmap=cmap, vmin=0, vmax=nobjs)
+    for obj_id, obj in enumerate(objs):
+        plt.text(obj.bbox[1], obj.bbox[0], obj_id,
+                 fontdict=dict(color='white', size=6),
+                 bbox=dict(fill=False, linewidth=0)
+                 )
+
     axis.set_title(title)
     if show:
         plt.show()
