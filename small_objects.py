@@ -33,7 +33,7 @@ def small_objects(th: float, min_size: int, show: bool=True):
 
     fig_raw, ax_raw, cmap_raw = plot_mask(labels_pred, "raw mask", show=False)
     fig_clean, ax_clean, _ = plot_mask(cleaned_mask, "cleaned mask", show=False)
-    plot_masks_comparison(ax_raw, ax_clean, cmap_raw, show=show)
+    plot_masks_comparison(ax_raw, ax_clean, cmap_raw, title="Remove small objects", show=show)
 
     # save masks without small objects
     io.imsave(DATA_PATH / f"{fn.split('.')[0]}-cleaned.png", cleaned_mask.astype('uint8') * 255, check_contrast=False)

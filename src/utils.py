@@ -56,13 +56,14 @@ def plot_mask(mask: np.array, title: str, show: bool = True):
     return fig, axis, cmap
 
 
-def plot_masks_comparison(ax_raw: Axes, ax_processed: Axes, cmap: ListedColormap, show: bool = True):
+def plot_masks_comparison(ax_raw: Axes, ax_processed: Axes, cmap: ListedColormap, title: str, show: bool = True):
     """Plot masks before and after processing side by side for comparison."""
     fig_cmp, ax_cmp = plt.subplots(1, 2, figsize=(14, 6))
     ax_cmp[0].imshow(ax_raw.get_images()[0].get_array(), cmap=cmap)
     ax_cmp[0].set_title('before')
     ax_cmp[1].imshow(ax_processed.get_images()[0].get_array(), cmap=cmap)
     ax_cmp[1].set_title('after')
+    plt.suptitle(title)
     plt.tight_layout()
     if show:
         plt.show()
