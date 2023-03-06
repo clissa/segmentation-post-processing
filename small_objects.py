@@ -1,6 +1,5 @@
 import numpy as np
-from scipy import ndimage
-from skimage import io
+from skimage import io, measure
 from skimage.morphology import remove_small_objects
 
 from src.utils import DATA_PATH
@@ -25,7 +24,7 @@ def small_objects(th: float, min_size: int, show: bool=True):
     print_stats(t_mask)
 
     # get objects, this is the first step
-    labels_pred, nlabels_pred = ndimage.label(t_mask)
+    labels_pred, nlabels_pred = measure.label(t_mask, return_num=True, connectivity=1)
     print_stats(labels_pred)
     print(f"{nlabels_pred=}")
 
