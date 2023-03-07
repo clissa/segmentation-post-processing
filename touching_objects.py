@@ -36,10 +36,12 @@ def enhance_objects_basin(mask: np.array, max_filt_size: int, show: bool = True)
     return bool_mask, distance, maxi
 
 
-def get_basin_markers(maxi: np.array, fs_size: (int, int), bool_mask: np.array, show: bool = True):
+def get_basin_markers(maxi: np.array, fs_size: (int, int), bool_mask: np.array, show: bool = True, min_size: int = 0):
     # get indexes of local maxima
     local_maxi = peak_local_max(np.squeeze(maxi), indices=False, footprint=np.ones(fs_size), exclude_border=False,
                                 labels=np.squeeze(bool_mask))
+    if min_size:
+        local_maxi = remove_small_objects(local_maxi, min_size=min_size, connectivity=1)
 
     print('local maximum')
     print_stats(local_maxi)
