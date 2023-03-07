@@ -57,7 +57,7 @@ def get_basin_markers(maxi: np.array, fs_size: (int, int), bool_mask: np.array, 
 
 def touching_objects(th: float, min_size: int, max_filt_size: int, fs_size: (int, int), show: bool = True):
     # first get cleaned mask
-    fn, heatmap, t_mask, cleaned_mask, thresholded_objects = small_objects(th, min_size, show=False)
+    t_mask, cleaned_mask, thresholded_objects = small_objects(heatmap, th, min_size, show=False)
 
     # find local maxima; NOTE: play with `max_filter_size` and `footprint` parameters
     bool_mask, distance, maxi = enhance_objects_basin(cleaned_mask, max_filt_size, show=show)
