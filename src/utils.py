@@ -22,6 +22,7 @@ def plot_heatmap(heatmap: np.array, title: str):
     divider = make_axes_locatable(axis)
     cax = divider.append_axes("right", size="5%", pad=0.05)
     plt.colorbar(im, cax=cax)
+    plt.show()
     return fig, axis, cax
 
 
@@ -61,6 +62,7 @@ def plot_masks_comparison(ax_raw: Axes, ax_processed: Axes, cmap: ListedColormap
     ax_cmp[1].set_title('after')
     plt.suptitle(title)
     plt.tight_layout()
+    plt.show()
     return fig_cmp, ax_cmp
 
 

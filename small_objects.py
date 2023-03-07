@@ -10,7 +10,7 @@ THRESHOLD: float = 0.45
 MIN_SIZE: int = 100
 
 
-def small_objects(th: float, min_size: int, show: bool=True):
+def small_objects(th: float, min_size: int, show: bool = True):
     # get sample mask
     fn: str = '11.png'
     heatmap: np.array = io.imread(DATA_PATH / '11.png', as_gray=True) / 255
@@ -20,7 +20,6 @@ def small_objects(th: float, min_size: int, show: bool=True):
 
     # thresholding
     t_mask: np.array = heatmap > th
-    plot_heatmap(t_mask, "thresholded mask")
     print_stats(t_mask)
 
     # get objects, this is the first step
@@ -31,6 +30,8 @@ def small_objects(th: float, min_size: int, show: bool=True):
     # remove small objects, under `min_size` area
     cleaned_mask: np.array = remove_small_objects(labels_pred, min_size=min_size, connectivity=1)
 
+    if show:
+        plot_heatmap(t_mask, "thresholded mask")
     fig_raw, ax_raw, cmap_raw = plot_mask(labels_pred, "raw mask")
     fig_clean, ax_clean, _ = plot_mask(cleaned_mask, "cleaned mask")
     plot_masks_comparison(ax_raw, ax_clean, cmap_raw, title="Remove small objects")
@@ -38,6 +39,7 @@ def small_objects(th: float, min_size: int, show: bool=True):
     # save masks without small objects
     io.imsave(DATA_PATH / f"{fn.split('.')[0]}-cleaned.png", cleaned_mask.astype('uint8') * 255, check_contrast=False)
     return fn, heatmap, t_mask, cleaned_mask, labels_pred
+
 
 if __name__ == '__main__':
     small_objects(THRESHOLD, MIN_SIZE)
