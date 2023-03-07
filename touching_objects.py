@@ -8,9 +8,9 @@ from skimage.segmentation import watershed
 from small_objects import small_objects, THRESHOLD, MIN_SIZE
 from src.utils import plot_heatmap, plot_mask, print_stats, plot_masks_comparison, DATA_PATH
 
-FS_SIZE = (2, 2)
+MAX_FILTER_SIZE = 4  # half of average cell minimum axis
 
-MAX_FILTER_SIZE = 20
+FS_SIZE = (6, 6)  # half of average cell maximum axis
 
 
 def enhance_objects_basin(mask: np.array, max_filt_size: int, show: bool = True):
