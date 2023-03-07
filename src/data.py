@@ -48,6 +48,21 @@ def get_shapes_data():
         nobjs += 1
         mask[row, col] = nobjs
 
+    # add some noise
+    for _ in range(8):
+        # x, y = random.sample(range(100), k=2)
+        x = random.sample(range(40, 80), k=1)[0]
+        y = random.sample(range(40, 60), k=1)[0]
+        r = random.sample(range(1, 4), k=1)[0]
+
+        print("Sampled:", f"{x=}, {y=}, {r=}")
+        # casually add disk or rectangle
+        if random.random() > 0.5:
+            row, col = draw.disk((y, x), r)
+        else:
+            row, col = draw.rectangle(start=(y, x), extent=r)
+        mask[row, col] = nobjs
+
     # save
     io.imsave(DATA_PATH / 'ground-truth-mask.png', mask.astype('uint8') * 255, check_contrast=False)
 
