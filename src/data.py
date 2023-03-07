@@ -22,7 +22,7 @@ def get_shapes_data():
     # polygon
     row, col = draw.polygon((7, 19, 26), (44, 95, 51))
     mask[row, col] = 4
-    row, col = draw.polygon((26, 19, 23, 37, 34), (32, 46, 53, 47, 36))
+    row, col = draw.polygon((26, 19, 23, 37, 34), (32, 46, 54, 47, 36))
     mask[row, col] = 5
 
     # holes
