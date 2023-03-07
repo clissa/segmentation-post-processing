@@ -1,6 +1,7 @@
 import numpy as np
 from scipy import ndimage
 from skimage.feature import peak_local_max
+from skimage.morphology import remove_small_objects
 from skimage.segmentation import watershed
 
 from small_objects import small_objects, THRESHOLD, MIN_SIZE
@@ -71,8 +72,15 @@ def touching_objects(th: float, min_size: int, max_filt_size: int, fs_size: (int
     fig_watershed, ax_watershed, cmap_watershed = plot_mask(watershed_mask, "watershed")
     plot_masks_comparison(ax_clean, ax_watershed, cmap_watershed, title="Separe close/overlapping objects")
 
-    return labels_cleaned, nlabels_cleaned
+    watershed_cleaned_mask = remove_small_objects(watershed_mask, min_size=min_size, connectivity=1)
+    # labels_watershedcleaned, nlabels_cleaned = measure.label(watershed_mask, return_num=True, connectivity=1)
+    fig_watershed_cleaned, ax_watershed_cleaned, cmap_watershed_cleaned = plot_mask(watershed_cleaned_mask,
+                                                                                    f'watershed cleaned')
+    plot_masks_comparison(ax_watershed, ax_watershed_cleaned, cmap_watershed,
+                          title="Remove small objects after watershed")
+
+    return watershed_cleaned_mask
 
 
 if __name__ == '__main__':
-    touching_objects(THRESHOLD, MIN_SIZE, MAX_FILTER_SIZE, FS_SIZE)
+    touching_objects(THRESHOLD, MIN_SIZE, MAX_FILTER_SIZE, FS_SIZE, show=False)
