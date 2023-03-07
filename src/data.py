@@ -39,7 +39,6 @@ def get_shapes_data():
     nobjs = 5
     # crowded area
     for _ in range(8):
-        # x, y = random.sample(range(60, 100), k=2)
         ax_x, ax_y = random.sample(range(2, 9), k=2)
         x = random.sample(range(50, 100), k=1)[0]
         y = random.sample(range(60, 100), k=1)[0]
@@ -47,6 +46,19 @@ def get_shapes_data():
         row, col = draw.ellipse(y, x, ax_y, ax_x, rotation=np.deg2rad(alpha), shape=mask.shape)
         nobjs += 1
         mask[row, col] = nobjs
+
+    # add some noise
+    for _ in range(8):
+        x = random.sample(range(40, 80), k=1)[0]
+        y = random.sample(range(40, 60), k=1)[0]
+        r = random.sample(range(1, 4), k=1)[0]
+
+        # casually add disk or rectangle
+        if random.random() > 0.5:
+            row, col = draw.disk((y, x), r)
+        else:
+            row, col = draw.rectangle(start=(y, x), extent=r)
+        mask[row, col] = nobjs + 1 # all with same values
 
     # save
     io.imsave(DATA_PATH / 'ground-truth-mask.png', mask.astype('uint8') * 255, check_contrast=False)
