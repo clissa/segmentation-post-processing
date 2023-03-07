@@ -57,7 +57,8 @@ def get_basin_markers(maxi: np.array, fs_size: (int, int), bool_mask: np.array, 
     return local_maxi, markers, nmarkers
 
 
-def touching_objects(heatmap: np.array, th: float, min_size: int, max_filt_size: int, fs_size: (int, int), show: bool = True):
+def touching_objects(heatmap: np.array, th: float, min_size: int, max_filt_size: int, fs_size: (int, int),
+                     show: bool = True):
     # first get cleaned mask
     t_mask, cleaned_mask, thresholded_objects = small_objects(heatmap, th, min_size, show=False)
 
@@ -75,8 +76,9 @@ def touching_objects(heatmap: np.array, th: float, min_size: int, max_filt_size:
     fig_watershed, ax_watershed, cmap_watershed = plot_mask(watershed_mask, "watershed")
     plot_masks_comparison(ax_clean, ax_watershed, cmap_watershed, title="Separe close/overlapping objects")
 
-    watershed_cleaned_mask = remove_small_objects(watershed_mask, min_size=min_size, connectivity=1)
-    # labels_watershedcleaned, nlabels_cleaned = measure.label(watershed_mask, return_num=True, connectivity=1)
+    local_maxi_cleaned, markers_cleaned, nmarkers_cleaned = get_basin_markers(maxi, fs_size, bool_mask, min_size=10)
+    watershed_cleaned_mask = watershed(-distance, markers_cleaned, mask=np.squeeze(bool_mask), compactness=1,
+                                       watershed_line=False)
     fig_watershed_cleaned, ax_watershed_cleaned, cmap_watershed_cleaned = plot_mask(watershed_cleaned_mask,
                                                                                     f'watershed cleaned')
     plot_masks_comparison(ax_watershed, ax_watershed_cleaned, cmap_watershed,
@@ -89,7 +91,8 @@ if __name__ == '__main__':
     # get sample mask
     fn: str = '11.png'
     heatmap: np.array = io.imread(DATA_PATH / '11.png', as_gray=True) / 255
-    watershed_mask, watershed_cleaned_mask = touching_objects(heatmap, THRESHOLD, MIN_SIZE, MAX_FILTER_SIZE, FS_SIZE, show=False)
+    watershed_mask, watershed_cleaned_mask = touching_objects(heatmap, THRESHOLD, MIN_SIZE, MAX_FILTER_SIZE, FS_SIZE,
+                                                              show=False)
 
     # save masks without small objects
     io.imsave(DATA_PATH / f"{fn.split('.')[0]}-watershed.png", watershed_mask.astype('uint8') * 255,
