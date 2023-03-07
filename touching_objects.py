@@ -90,7 +90,7 @@ def touching_objects(heatmap: np.array, th: float, min_size: int, max_filt_size:
 if __name__ == '__main__':
     # get sample mask
     fn: str = '11.png'
-    heatmap: np.array = io.imread(DATA_PATH / '11.png', as_gray=True) / 255
+    heatmap: np.array = io.imread(DATA_PATH / fn, as_gray=True) / 255
     watershed_mask, watershed_cleaned_mask = touching_objects(heatmap, THRESHOLD, MIN_SIZE, MAX_FILTER_SIZE, FS_SIZE,
                                                               show=False)
 
