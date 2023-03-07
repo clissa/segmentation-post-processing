@@ -49,7 +49,8 @@ def plot_mask(mask: np.array, title: str):
                  bbox=dict(fill=False, linewidth=0)
                  )
 
-    axis.set_title(title)
+    axis.set_title(f"{title} - N. objects: {nobjs}")
+    plt.show()
     return fig, axis, cmap
 
 
