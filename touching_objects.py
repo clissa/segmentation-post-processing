@@ -1,5 +1,6 @@
 import numpy as np
 from scipy import ndimage
+from skimage import io
 from skimage.feature import peak_local_max
 from skimage.morphology import remove_small_objects
 from skimage.segmentation import watershed
@@ -79,6 +80,11 @@ def touching_objects(th: float, min_size: int, max_filt_size: int, fs_size: (int
     plot_masks_comparison(ax_watershed, ax_watershed_cleaned, cmap_watershed,
                           title="Remove small objects after watershed")
 
+    # save masks without small objects
+    io.imsave(DATA_PATH / f"{fn.split('.')[0]}-watershed.png", watershed_mask.astype('uint8') * 255,
+              check_contrast=False)
+    io.imsave(DATA_PATH / f"{fn.split('.')[0]}-watershed_cleaned.png", watershed_mask.astype('uint8') * 255,
+              check_contrast=False)
     return watershed_cleaned_mask
 
 
