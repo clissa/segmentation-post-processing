@@ -56,11 +56,30 @@ def plot_mask(mask: np.array, title: str):
 
 def plot_masks_comparison(ax_raw: Axes, ax_processed: Axes, cmap: ListedColormap, title: str):
     """Plot masks before and after processing side by side for comparison."""
+    raw_mask = ax_raw.get_images()[0].get_array()
+    processed_mask = ax_processed.get_images()[0].get_array()
+
+    raw_labels, raw_nobjs = measure.label(raw_mask, return_num=True, connectivity=1)
+    raw_objs = measure.regionprops(raw_labels)
+    processed_labels, processed_nobjs = measure.label(processed_mask, return_num=True, connectivity=1)
+    processed_objs = measure.regionprops(processed_labels)
+
     fig_cmp, ax_cmp = plt.subplots(1, 2, figsize=(14, 6))
-    ax_cmp[0].imshow(ax_raw.get_images()[0].get_array(), cmap=cmap)
-    ax_cmp[0].set_title('before')
-    ax_cmp[1].imshow(ax_processed.get_images()[0].get_array(), cmap=cmap)
-    ax_cmp[1].set_title('after')
+    ax_cmp[0].imshow(raw_mask, cmap=cmap)
+    ax_cmp[0].set_title(f'before - N. objects: {raw_nobjs}')
+    for obj in raw_objs:
+        ax_cmp[0].text(obj.bbox[1], obj.bbox[0], obj.label,
+                       fontdict=dict(color='white', size=7),
+                       bbox=dict(fill=False, linewidth=0)
+                       )
+    ax_cmp[1].imshow(processed_mask, cmap=cmap)
+    ax_cmp[1].set_title(f'after - N. objects: {processed_nobjs}')
+    for obj in processed_objs:
+        ax_cmp[1].text(obj.bbox[1], obj.bbox[0], obj.label,
+                       fontdict=dict(color='white', size=7),
+                       bbox=dict(fill=False, linewidth=0)
+                       )
+
     plt.suptitle(title)
     plt.tight_layout()
     plt.show()
