@@ -5,6 +5,9 @@ from src.utils import plot_mask, DATA_PATH
 
 
 def get_shapes_data():
+    import random
+    random.seed(17)
+
     mask = np.zeros(shape=(100, 100))
 
     # circle
@@ -32,6 +35,18 @@ def get_shapes_data():
     mask[row, col] = 0
     row, col = draw.disk((35, 17), 3)
     mask[row, col] = 0
+
+    nobjs = 5
+    # crowded area
+    for _ in range(8):
+        # x, y = random.sample(range(60, 100), k=2)
+        ax_x, ax_y = random.sample(range(2, 9), k=2)
+        x = random.sample(range(50, 100), k=1)[0]
+        y = random.sample(range(60, 100), k=1)[0]
+        alpha = random.sample(range(91), k=1)[0]
+        row, col = draw.ellipse(y, x, ax_y, ax_x, rotation=np.deg2rad(alpha), shape=mask.shape)
+        nobjs += 1
+        mask[row, col] = nobjs
 
     # save
     io.imsave(DATA_PATH / 'ground-truth-mask.png', mask.astype('uint8') * 255, check_contrast=False)
