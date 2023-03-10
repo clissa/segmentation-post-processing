@@ -11,7 +11,8 @@ parser = ArgumentParser()
 
 parser.usage = "Read heatmap and remove small objects that pass the thresholding."
 
-parser.add_argument('fn', help="Filename of the heatmap to post-process.", type=str)
+parser.add_argument('fn', help="Filename of the heatmap to post-process. This assumes files are in `DATA_PATH` folder.",
+                    type=str)
 parser.add_argument('threshold', help="Binarization threshold.", type=float, default=0.5, nargs='?')
 parser.add_argument('min_size', help="Minimum allowed object size.", type=int, default=100, nargs='?')
 args: Namespace = parser.parse_args()
@@ -48,4 +49,7 @@ if __name__ == '__main__':
     t_mask, cleaned_mask, labels_pred = small_objects(heatmap, args.threshold, args.min_size)
 
     # save masks without small objects
-    io.imsave(DATA_PATH / f"{fn.split('.')[0]}-cleaned.png", cleaned_mask.astype('uint8') * 255, check_contrast=False)
+    outpath = DATA_PATH / 'post-processed'
+    outpath.mkdir(parents=True, exist_ok=True)
+    io.imsave(outpath / f"{args.fn.split('.')[0]}-cleaned.png", cleaned_mask.astype('uint8') * 255,
+              check_contrast=False)
