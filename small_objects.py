@@ -5,13 +5,19 @@ from skimage.morphology import remove_small_objects
 from src.utils import DATA_PATH
 from src.utils import plot_heatmap, plot_mask, plot_masks_comparison, print_stats
 
-THRESHOLD: float = 0.45
+from argparse import ArgumentParser, Namespace
 
-MIN_SIZE: int = 100
+parser = ArgumentParser()
+
+parser.usage = "Read heatmap and remove small objects that pass the thresholding."
+
+parser.add_argument('fn', help="Filename of the heatmap to post-process.", type=str)
+parser.add_argument('threshold', help="Binarization threshold.", type=float, default=0.5, nargs='?')
+parser.add_argument('min_size', help="Minimum allowed object size.", type=int, default=100, nargs='?')
+args: Namespace = parser.parse_args()
 
 
 def small_objects(heatmap: np.array, th: float, min_size: int, show: bool = True):
-
     _ = plot_heatmap(heatmap, "heatmap")
     print_stats(heatmap)
 
@@ -38,9 +44,8 @@ def small_objects(heatmap: np.array, th: float, min_size: int, show: bool = True
 
 if __name__ == '__main__':
     # get sample mask
-    fn: str = '11.png'
-    heatmap: np.array = io.imread(DATA_PATH / fn, as_gray=True) / 255
-    t_mask, cleaned_mask, labels_pred = small_objects(heatmap, THRESHOLD, MIN_SIZE)
+    heatmap: np.array = io.imread(DATA_PATH / args.fn, as_gray=True) / 255
+    t_mask, cleaned_mask, labels_pred = small_objects(heatmap, args.threshold, args.min_size)
 
     # save masks without small objects
     io.imsave(DATA_PATH / f"{fn.split('.')[0]}-cleaned.png", cleaned_mask.astype('uint8') * 255, check_contrast=False)
