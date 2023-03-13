@@ -1,21 +1,11 @@
+from argparse import ArgumentParser, Namespace
+
 import numpy as np
 from skimage import io, measure
 from skimage.morphology import remove_small_objects
 
 from src.utils import DATA_PATH
 from src.utils import plot_heatmap, plot_mask, plot_masks_comparison, print_stats
-
-from argparse import ArgumentParser, Namespace
-
-parser = ArgumentParser()
-
-parser.usage = "Read heatmap and remove small objects that pass the thresholding."
-
-parser.add_argument('fn', help="Filename of the heatmap to post-process. This assumes files are in `DATA_PATH` folder.",
-                    type=str)
-parser.add_argument('threshold', help="Binarization threshold.", type=float, default=0.5, nargs='?')
-parser.add_argument('min_size', help="Minimum allowed object size.", type=int, default=100, nargs='?')
-args: Namespace = parser.parse_args()
 
 
 def small_objects(heatmap: np.array, th: float, min_size: int, show: bool = True):
@@ -44,6 +34,17 @@ def small_objects(heatmap: np.array, th: float, min_size: int, show: bool = True
 
 
 if __name__ == '__main__':
+    parser = ArgumentParser()
+
+    parser.usage = "Read heatmap and remove small objects that pass the thresholding."
+
+    parser.add_argument('fn',
+                        help="Filename of the heatmap to post-process. This assumes files are in `DATA_PATH` folder.",
+                        type=str)
+    parser.add_argument('threshold', help="Binarization threshold.", type=float, default=0.5, nargs='?')
+    parser.add_argument('min_size', help="Minimum allowed object size.", type=int, default=100, nargs='?')
+    args: Namespace = parser.parse_args()
+
     # get sample mask
     heatmap: np.array = io.imread(DATA_PATH / args.fn, as_gray=True) / 255
     t_mask, cleaned_mask, labels_pred = small_objects(heatmap, args.threshold, args.min_size)

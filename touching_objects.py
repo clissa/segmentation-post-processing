@@ -1,3 +1,5 @@
+from argparse import ArgumentParser, Namespace
+
 import numpy as np
 from scipy import ndimage
 from skimage import io
@@ -5,23 +7,8 @@ from skimage.feature import peak_local_max
 from skimage.morphology import remove_small_objects
 from skimage.segmentation import watershed
 
-from small_objects import small_objects#, THRESHOLD, MIN_SIZE
+from small_objects import small_objects  # , THRESHOLD, MIN_SIZE
 from src.utils import plot_heatmap, plot_mask, print_stats, plot_masks_comparison, DATA_PATH
-
-from argparse import ArgumentParser, Namespace
-
-parser = ArgumentParser()
-
-parser.usage = "Read heatmap and remove small objects that pass the thresholding."
-
-parser.add_argument('fn', help="Filename of the heatmap to post-process. This assumes files are in `DATA_PATH` folder.",
-                    type=str)
-parser.add_argument('threshold', help="Binarization threshold.", type=float, default=0.5, nargs='?')
-parser.add_argument('min_size', help="Minimum allowed object size.", type=int, default=100, nargs='?')
-parser.add_argument('max_filt_size', help="Filter size used in maximum filter.", type=int, default=4, nargs='?')
-parser.add_argument('fp_size', help="Footprint size used in to find local maxima (`peak_local_max`).", type=int,
-                    default=6, nargs='?')
-args: Namespace = parser.parse_args()
 
 
 def enhance_objects_basin(mask: np.array, max_filt_size: int, show: bool = True):
@@ -99,6 +86,20 @@ def touching_objects(heatmap: np.array, th: float, min_size: int, max_filt_size:
 
 
 if __name__ == '__main__':
+    parser = ArgumentParser()
+
+    parser.usage = "Read heatmap and remove small objects that pass the thresholding."
+
+    parser.add_argument('fn',
+                        help="Filename of the heatmap to post-process. This assumes files are in `DATA_PATH` folder.",
+                        type=str)
+    parser.add_argument('threshold', help="Binarization threshold.", type=float, default=0.5, nargs='?')
+    parser.add_argument('min_size', help="Minimum allowed object size.", type=int, default=100, nargs='?')
+    parser.add_argument('max_filt_size', help="Filter size used in maximum filter.", type=int, default=4, nargs='?')
+    parser.add_argument('fp_size', help="Footprint size used in to find local maxima (`peak_local_max`).", type=int,
+                        default=6, nargs='?')
+    args: Namespace = parser.parse_args()
+
     # get sample mask
     # fn: str = '11.png'
     heatmap: np.array = io.imread(DATA_PATH / args.fn, as_gray=True) / 255
