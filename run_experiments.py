@@ -47,7 +47,9 @@ def main(fn: str, threshold: float, min_size: int, max_filt_size: int, fp: int):
     from src.utils import print_stats
     print_stats(watershed_mask)
     row_data = [fn, threshold, min_size, max_filt_size, footprint_size,
-                wandb.Image(heatmap), wandb.Image(watershed_mask), wandb.Image(watershed_cleaned_mask)]
+                wandb.Image(heatmap * 255),
+                wandb.Image(watershed_mask, masks={"predictions": {"mask_data": watershed_mask}}),
+                wandb.Image(watershed_cleaned_mask, masks={"predictions": {"mask_data": watershed_cleaned_mask}})]
 
     return row_data
 
@@ -55,7 +57,7 @@ def main(fn: str, threshold: float, min_size: int, max_filt_size: int, fp: int):
 if __name__ == '__main__':
     import matplotlib
 
-    # matplotlib.use('Agg')
+    matplotlib.use('Agg')
 
     from tqdm.auto import tqdm
     import wandb
@@ -81,6 +83,5 @@ if __name__ == '__main__':
         for row in data:
             print(row)
             table.add_data(*row)
-        break
 
     run.log({"Results/post-processing": table})
